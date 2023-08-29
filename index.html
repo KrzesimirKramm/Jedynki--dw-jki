@@ -83,12 +83,12 @@
 				height: 30px;
 			}	
 		</style-->
-        <title>Jedynki, dwójki, pozostali kandydaci</title>
+        <title>2019 Polish parliamentary election - Sejm</title>
     </head>
     <body>
         <div id="map">
 			<div id='loader'>
-				<p style="color: black; padding: 20px; font-size: 32px; display: block; position: absolute; top: 20%; width: 100%; text-align: center;">Ładowanie danych mapy...</p>
+				<p style="color: black; padding: 20px; font-size: 32px; display: block; position: absolute; top: 20%; width: 100%; text-align: center;">Loading map data...</p>
 				<img src='images/200.gif' alt='loader' />
 			</div>
 			<div class="modal"><!-- Place at bottom of page --></div>
@@ -198,10 +198,10 @@
 		var select_twice = false;
 		var auto_zoom = false;
 		var already_selected = true;
-		var xa = 'Udział jedynki (%)';
-		var ya = 'Udział dwójki (%)';
-		var za = 'Udział pozostałych kandydatów (%)';
-		var pa = 'Poparcie dla listy (%)';
+		var xa = '1st-listed cand. (%)';
+		var ya = '2nd-listed cand. (%)';
+		var za = 'Other cand. (%)';
+		var pa = 'Support for the list (%)';
 		var xb = xa;
 		var yb = ya;
 		var zb = za;
@@ -227,6 +227,12 @@
 		var lastZoom = 6;
 		
 		var pop_moving = false;
+		
+		const name_1 = ' LAW AND JUSTICE';
+		const name_2 = ' CIVIC COALITION';
+		const name_3 = ' THE LEFT';
+		const name_4 = ' POLISH COALITION';
+		const name_5 = ' CONFEDERATION';
 		
 		var lab_centers = [];
 		L.Polygon.include({
@@ -477,14 +483,14 @@
 			}else{
 				a = 'gm/'+kod.substring(0, 6);
 			}
-			return 'https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/pl/wyniki/sejm/'+a;
+			return 'https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/en/wyniki/sejm/'+a;
 		}
 		var pow_map = new Map();
         function pop_GminydemDPolygon_0(feature, layer) {
 			var p = layer.feature.properties;
-			var popupContent = '<h5 style="margin-bottom: 8px;"><a href = "'+toPkw(p.JPT_KOD_JE)+'" target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a>'+(p.JPT_KOD_JE.substring(6, 7) !== "1"? 'gm.' : 'm.')+'&nbsp;'+p.JPT_NAZWA_+'</h5><div class="tabs">\
+			var popupContent = '<h5 style="margin-bottom: 8px;"><a href = "'+toPkw(p.JPT_KOD_JE)+'" target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a>'+(p.JPT_KOD_JE.substring(6, 7) !== "1"? 'gm.' : '')+'&nbsp;'+p.JPT_NAZWA_+'</h5><div class="tabs">\
 				<ul class="tab-links">\
-					<li class="active"><a href="#tab1">Podsumowanie</a></li>\
+					<li class="active"><a href="#tab1">Summary</a></li>\
 					<li><a href="#tab2"><img src="legend/PiS.png" alt ="PiS"  class="Logo"/> </a></li>\
 					<li><a href="#tab3"><img src="legend/KO.png" alt="KO"   class="Logo"/></a></li>\
 					<li><a href="#tab4"><img src="legend/Lewica.jpg" alt="Lewica"   class="Logo"/></a></li>\
@@ -694,9 +700,9 @@
 		function createToolSimpl(tdata){
 			return '<td class="all">\
 				<div class="containers" style="display: flex">\
-					<a class="has-tooltip" href="#"><span class="n_gm">'+ (tdata.substring(6, 7) !== "1"? 'gm.' : 'm.')+'&nbsp;'+ '<span class="gmina">'+ json_GminydemDPolygon_0.getFeaturesByProperty('JPT_KOD_JE', tdata)[0].properties.JPT_NAZWA_ +'</span></span>\
+					<a class="has-tooltip" href="#"><span class="n_gm">'+ (tdata.substring(6, 7) !== "1"? 'gm.' : '')+'&nbsp;'+ '<span class="gmina">'+ json_GminydemDPolygon_0.getFeaturesByProperty('JPT_KOD_JE', tdata)[0].properties.JPT_NAZWA_ +'</span></span>\
 						<span class="tooltip-wrappers">\
-							<span class="tooltips tooltips1"><h4 style="margin: 4px; padding: 0px; text-align: center;">Położenie:</h4>TERYT: <span class="kod">' +tdata+'</span><br>'+ json_Powiaty_Simplified_1.getFeaturesByProperty('JPT_KOD_JE', tdata.substring(0,4))[0].properties.JPT_NAZWA_+'<br>Okręg wyborczy nr ' +  json_GminydemDPolygon_0.getFeaturesByProperty('JPT_KOD_JE', tdata)[0].properties.Okr + '\
+							<span class="tooltips tooltips1"><h4 style="margin: 4px; padding: 0px; text-align: center;">Location:</h4>TERYT: <span class="kod">' +tdata+'</span><br>'+ json_Powiaty_Simplified_1.getFeaturesByProperty('JPT_KOD_JE', tdata.substring(0,4))[0].properties.JPT_NAZWA_+'<br>Constituency no. ' +  json_GminydemDPolygon_0.getFeaturesByProperty('JPT_KOD_JE', tdata)[0].properties.Okr + '\
 							</span>\
 						</span>\
 					</a>\
@@ -1146,14 +1152,14 @@
 		console.log(l5);
 
 		var mapLayers = {
-		'<img src="legend/PiS.png" alt ="PiS"  class="Logo"/> KW PRAWO I SPRAWIEDLIWOŚĆ' : mapLayer1,
-		'<img src="legend/KO.png" alt="KO"   class="Logo"/> KKW KOALICJA OBYWATELSKA PO .N IPL ZIELONI' : mapLayer2,
-		'<img src="legend/Lewica.jpg" alt="Lewica"   class="Logo"/> KW SOJUSZ LEWICY DEMOKRATYCZNEJ' : mapLayer3,
-		'<img src="legend/PSL.png" alt="PSL"   class="Logo"/> KOMITET WYBORCZY PSL' : mapLayer4,
-		'<img src="legend/Konfederacja.jpg" alt="Konfederacja"   class="Logo"/> KW KONFEDERACJA WOLNOŚĆ I NIEPODLEGŁOŚĆ' : mapLayer5
+		'<img src="legend/PiS.png" alt ="PiS"  class="Logo"/> Law and Justice' : mapLayer1,
+		'<img src="legend/KO.png" alt="KO"   class="Logo"/> Civic Coalition' : mapLayer2,
+		'<img src="legend/Lewica.jpg" alt="Lewica"   class="Logo"/> The Left' : mapLayer3,
+		'<img src="legend/PSL.png" alt="PSL"   class="Logo"/> Polish Coalition' : mapLayer4,
+		'<img src="legend/Konfederacja.jpg" alt="Konfederacja"   class="Logo"/> Confederation' : mapLayer5
 		};
 		
-		var layerControl0 = new L.control.layers(mapLayers,{'<img src="legend/Granicewojewdztw_2.png" /> Granice okręgów wyborczych': Okry,'<img src="legend/Powiaty_Simplified_1.png" /> Granice powiatów': Powiaty},{collapsed:true, position: 'topright'}).addTo(map);
+		var layerControl0 = new L.control.layers(mapLayers,{'<img src="legend/Granicewojewdztw_2.png" /> Constituency boundaries': Okry,'<img src="legend/Powiaty_Simplified_1.png" /> County boundaries': Powiaty},{collapsed:true, position: 'topright'}).addTo(map);
 		var layerControl1 = new L.control.layers(null,null,{collapsed:true}).addTo(map);
 		var layerControl2 = new L.control.layers(null,null,{collapsed:false}).addTo(map);
 		
@@ -1175,11 +1181,12 @@
 		
 		var css_sh_yell = "0px 0px 16px rgba(32, 32, 32, 0.4), -1px 0px 0px rgba(255, 255, 255, 1.0), -1px 1px 0px rgba(255, 255, 255, 1.0),0px -1px 0px rgba(255, 255, 255, 1.0),0px 1px 0px rgba(255, 255, 255, 1.0),1px -1px 0px rgba(255, 255, 255, 1.0),1px 0px 0px rgba(255, 255, 255, 1.0)";
 		
-		$('.leaflet-control-layers-toggle:eq( 0 )').html('<div style="background-image: linear-gradient(to right, #c4d3ae 0%, #b8e186 51%, #c4d3ae 100%); border-radius: 8px;box-shadow: 0 0 20px #888; border: 2px solid #fff; text-shadow: -1px 0 #b8e186, 0 1px #b8e186, 1px 0 #b8e186, 0 -1px #b8e186;">Wybór mapy...</div>');
-		$('.leaflet-control-layers-toggle:eq( 1 )').html('<div style="background-image: linear-gradient(to right, #c4d3ae 0%, #b8e186 51%, #c4d3ae 100%); border-radius: 8px;box-shadow: 0 0 20px #888; border: 2px solid #fff; text-shadow: -1px 0 #b8e186, 0 1px #b8e186, 1px 0 #b8e186, 0 -1px #b8e186;">Podsumowanie</div>');
+		$('.leaflet-control-layers-toggle:eq( 0 )').html('<div style="background-image: linear-gradient(to right, #c4d3ae 0%, #b8e186 51%, #c4d3ae 100%); border-radius: 8px;box-shadow: 0 0 20px #888; border: 2px solid #fff; text-shadow: -1px 0 #b8e186, 0 1px #b8e186, 1px 0 #b8e186, 0 -1px #b8e186;">Map selection...</div>'); //wybór mapy
+		$('.leaflet-control-layers-toggle:eq( 1 )').html('<div style="background-image: linear-gradient(to right, #c4d3ae 0%, #b8e186 51%, #c4d3ae 100%); border-radius: 8px;box-shadow: 0 0 20px #888; border: 2px solid #fff; text-shadow: -1px 0 #b8e186, 0 1px #b8e186, 1px 0 #b8e186, 0 -1px #b8e186;">Summary</div>'); //Podsumowanie
 		
+		//Poparcie oraz rozkład głosów na listach komitetów ogólnopolskich
 		$('.leaflet-control-layers-list:eq( 1 )').html('<div>\
-			<h5 style="text-align: center; color: #282828;">Poparcie oraz rozkład głosów na listach komitetów ogólnopolskich (<em><span style="color: red;"><a href = "https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/pl/wyniki/sejm/pl" target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a>Polska i zagranica</span></em>):</h5>\
+			<h5 style="text-align: center; color: #282828;">Support and distribution of votes on the lists of nationwide committees (<em><span style="color: red;"><a href = "https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/en/wyniki/sejm/pl" target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a>Poland and abroad</span></em>):</h5>\
 			<table class = "tabela" id="Podsumowanie_tot">\
 				<thead>\
 					<tr style="background: none;">\
@@ -1194,7 +1201,7 @@
 				<tbody>\
 				</tbody>\
 			</table></div>');
-		//$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html('<a href = "https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/pl/wyniki/sejm/pl" target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a>Polska i zagranica');
+		//$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html('<a href = "https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/en/wyniki/sejm/pl" target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a>Poland i zagranica');
 		var _result = [8048635,4892333,2319946,1578523,1256953];
 		function renderRow_R(_value){
 			var _text = [''];
@@ -1232,22 +1239,22 @@
 		
 		function tCountry(){
 			$('.leaflet-control-layers-list:eq( 1 ) table:eq(0) tbody').empty();
-			$(".leaflet-control-layers-list:eq( 1 ) tbody").append('<tr><td>Liczba głosów oddanych na&nbsp;poszczególne komitety:</td>\
+			$(".leaflet-control-layers-list:eq( 1 ) tbody").append('<tr><td>Number of votes cast for individual committees:</td>\
 							'+renderRow_R(_result)+'\
 						</tr>');
-			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Odsetek głosów oddanych na&nbsp;poszczególne komitety:",43.59,27.40,12.56,8.55,6.81,700,true));
+			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Percentage of votes cast for individual committees:",43.59,27.40,12.56,8.55,6.81,700,true));
 			
-			$(".leaflet-control-layers-list:eq( 1 ) tbody").append('<tr><td>Liczba głosów oddanych na&nbsp;jedynki:</td>\
+			$(".leaflet-control-layers-list:eq( 1 ) tbody").append('<tr><td>Number of votes cast for the 1st-listed candidates:</td>\
 					'+renderRow_R(_first)+'\
 				</tr>');
-			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Odsetek głosów oddanych na&nbsp;jedynki:",pfirst[0],pfirst[1],pfirst[2],pfirst[3],pfirst[4],700,true));
+			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Share of 1st-listed candidates in the electoral outcome:",pfirst[0],pfirst[1],pfirst[2],pfirst[3],pfirst[4],700,true));
 			
-			$(".leaflet-control-layers-list:eq( 1 ) tbody").append('<tr><td>Liczba głosów oddanych na&nbsp;dwójki:</td>\
+			$(".leaflet-control-layers-list:eq( 1 ) tbody").append('<tr><td>Number of votes cast for the 2nd-listed candidates:</td>\
 					'+renderRow_R(_second)+'\
 				</tr>');
-			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Odsetek głosów oddanych na&nbsp;dwójki:",psecond[0],psecond[1],psecond[2],psecond[3],psecond[4],700,true));
+			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Share of 2nd-listed candidates in the electoral outcome:",psecond[0],psecond[1],psecond[2],psecond[3],psecond[4],700,true));
 			
-			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Odsetek głosów oddanych na&nbsp;kandydatów z&nbsp;miejsc od&nbsp;trzeciego do&nbsp;ostatniego:",prest[0],prest[1],prest[2],prest[3],prest[4],700,false));
+			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Participation in the electoral outcome candidates from the third to the last position on the lists:",prest[0],prest[1],prest[2],prest[3],prest[4],700,false));
 			
 		}
 		
@@ -1275,7 +1282,7 @@
 		tCountry();
 		cssSumm();
 		
-		$('.leaflet-control-layers-list:eq( 1 )').append('<p style="margin-bottom: 8px;">Źródło: Opracowanie własne na podstawie danych PKW.</p>');
+		$('.leaflet-control-layers-list:eq( 1 )').append('<p style="margin-bottom: 8px;">Source: Personal elaboration based on National Electoral Commission (Poland) data.</p>');
 		
 		$('.leaflet-control-layers-list:eq( 2 )').html('<div id="info-pane" class="leaflet-bar chart-container">\
 			  <canvas id="chartCanvas"></canvas>\
@@ -1287,12 +1294,12 @@
 		$('.leaflet-control-layers-list:eq( 2 )').css('line-height', '1.0');
 		$('.leaflet-control-layers-list:eq( 1 )').css('font-size', '12px');
 		$('.leaflet-control-layers-list:eq( 2 )').css('font-size', '12px');
-		$('.leaflet-control-layers-list:eq( 2 )').append('<div id="filter"><span style="text-align:center">Filtruj gminy:</span></div>');
+		$('.leaflet-control-layers-list:eq( 2 )').append('<div id="filter"><span style="text-align:center">Municipality filter:</span></div>');
 		$('.leaflet-control-layers-list:eq( 2 )').append('<div id="subfilter"></div>');
-		$('.leaflet-control-layers-list:eq( 2 )').append('<div id="changer"><span style="text-align:center">"Obróć"/zmień wykres:</span></div>');
+		$('.leaflet-control-layers-list:eq( 2 )').append('<div id="changer"><span style="text-align:center">"Rotate"/change the plot:</span></div>');
 		$('.leaflet-control-layers-list:eq( 2 )').append('<div style="margin:  32px 0px 0px 0px;"></div>');
 		$('<div id = "llegend"></div>').insertAfter('.leaflet-control-layers-list:eq( 0 ) .leaflet-control-layers-base');
-		$('#llegend').html('<div style="border-radius: 8px;box-shadow: 0 0 20px #888; border: 2px solid #fff; display: inline-block; margin-top: 8px; margin-bottom: 8px; width: 432px; margin-left: auto; margin-right: auto; text-align: center; position: relative;"><div id="ltitle">Poparcie w gminach dla KW PRAWO I&nbsp;SPRAWIEDLIWOŚĆ:</div><div id="vlegend"></div></div>');
+		$('#llegend').html('<div style="border-radius: 8px;box-shadow: 0 0 20px #888; border: 2px solid #fff; display: inline-block; margin-top: 8px; margin-bottom: 8px; width: 432px; margin-left: auto; margin-right: auto; text-align: center; position: relative;"><div id="ltitle">Support in municipalities for' + name_1 + ':</div><div id="vlegend"></div></div>');
 		
 		function drawLegend(col, perc){
 			var blegend = [];
@@ -1348,13 +1355,13 @@
 			layer: layer_current_cmy,
 			propertyName: 'index',
 			marker: false,
-			textPlaceholder: 'Wpisz nazwę gminy...',
+			textPlaceholder: 'Enter the name of the municipality...',
 			/*filterData: (text, records) => records,*/
 			buildTip: function(text, val) {
 					  var p = val.layer.feature.properties;
 					  var tip = p.JPT_NAZWA_;
 					  var vip = p.JPT_KOD_JE;
-					  return '<a href="#" class=""><div style="float:left; width: 176px;"><span style=" font-size: 12px;">'+ tip +'</span>, <span style=" font-size: 11px;"><i>' +(vip.substring(6,7)!=="1"?'gmina':'miasto')+ '</i></span></div><div style="float:left; font-size: 9px; padding-left: 4px;">' + json_Powiaty_Simplified_1.getFeaturesByProperty('JPT_KOD_JE', val.layer.feature.properties['JPT_KOD_JE'].substring(0,4))[0].properties.JPT_NAZWA_+'<br>Okręg wyborczy nr  ' +  json_Okr.getFeaturesByProperty('Okr', val.layer.feature.properties['Okr'])[0].properties.Okr + '</div><div style="clear:both;"></div></a>';
+					  return '<a href="#" class=""><div style="float:left; width: 176px;"><span style=" font-size: 12px;">'+ tip +'</span><span style=" font-size: 11px;"><i>' +(vip.substring(6,7)!=="1"?', gmina':'')+ '</i></span></div><div style="float:left; font-size: 9px; padding-left: 4px;">' + json_Powiaty_Simplified_1.getFeaturesByProperty('JPT_KOD_JE', val.layer.feature.properties['JPT_KOD_JE'].substring(0,4))[0].properties.JPT_NAZWA_+'<br>Constituency no. ' +  json_Okr.getFeaturesByProperty('Okr', val.layer.feature.properties['Okr'])[0].properties.Okr + '</div><div style="clear:both;"></div></a>';
 			},
 			moveToLocation: function(latlng, title, map) {
 				console.log("search");
@@ -1375,8 +1382,8 @@
 			
 			console.log($select);
 			console.log($select.val());
-			//if ($select.val()=='Polska'){
-				//console.log("Tak - Polska!");
+			//if ($select.val()=='Poland'){
+				//console.log("Tak - Poland!");
 			var wind = e.layer.feature.properties.Okr;
 			select_twice = true;
 			adm_clicked = true;
@@ -1541,22 +1548,22 @@
 		//var reg_data = chart.data.datasets[1].data
 		
 		var variables = [
-			' 	02 	woj. dolnośląskie',
-			' 	04 	woj. kujawsko-pomorskie',
-			' 	06 	woj. lubelskie',
-			' 	08 	woj. lubuskie',
-			' 	10 	woj. łódzkie',
-			' 	12 	woj. małopolskie',
-			' 	14 	woj. mazowieckie',
-			' 	16 	woj. opolskie',
-			' 	18		woj. podkarpackie',
-			' 	20 	woj. podlaskie',
-			' 	22 	woj. pomorskie',
-			' 	24 	woj. śląskie',
-			' 	26 	woj. świętokrzyskie',
-			' 	28 	woj. warmińsko-mazurskie',
-			' 	30 	woj. wielkopolskie',
-			' 	32 	woj. zachodniopomorskie'];
+			' 	02 	Lower Silesian Voivodeship',
+			' 	04 	Kuyavian-Pomeranian Voivodeship',
+			' 	06 	Lublin Voivodeship',
+			' 	08 	Lubusz Voivodeship',
+			' 	10 	Łódź Voivodeship',
+			' 	12 	Lesser Poland Voivodeship',
+			' 	14 	Masovian Voivodeship',
+			' 	16 	Opole Voivodeship',
+			' 	18	Subcarpathian Voivodeship',
+			' 	20 	Podlaskie Voivodeship',
+			' 	22 	Pomeranian Voivodeship',
+			' 	24 	Silesian Voivodeship',
+			' 	26 	Holy Cross Voivodeship',
+			' 	28 	Warmian-Masurian Voivodeship',
+			' 	30 	Greater Poland Voivodeship',
+			' 	32 	West Pomeranian Voivodeship'];
 			
 		var subvariables = [];
 		var _axis = [
@@ -1577,7 +1584,7 @@
 		var initialChartData = {
 			datasets: [
 			{
-			  label: 'Wybrana gmina',
+			  label: 'Chosen mun.',
 			  data: [],
 			  pointRadius: 6.4,
 			  pointBorderColor: 'rgba(255, 0, 0, 1.0)',
@@ -1590,7 +1597,7 @@
 			  order: 1,
 			  //showLine: false
 			},{
-			  label: 'Filtr gmin',
+			  label: 'Mun. filter',
 			  //title: 'Wybory Prezydenta RP',
 			  // the data values are empty at this moment
 			  // and will be updated dynamically below
@@ -1606,7 +1613,7 @@
 			  order: 3,
 			  //showLine: false
 			},{
-			  label: 'Kontekst',
+			  label: 'Context',
 			  data: [],
 			  /*pointBorderColor: pointBBorderColors,*/
 			  pointBorderColor: 'rgba(200, 200, 200, 0.5)',
@@ -1669,7 +1676,7 @@
 			},
 			title: {
 				display: true,
-				text: ['Udział kandydatów w wyniku listy oraz poparcie dla', 'KW PRAWO I SPRAWIEDLIWOŚĆ:']
+				text: ['Participation of candidates in the electoral outcome', 'and support for' + name_1 + ':']
 			},
 			legend: {
 				display: true,
@@ -1835,7 +1842,7 @@
 						function waitForElement(){
 							if (typeof tooltipItems[0].datasetIndex !== "undefined" /*&& tooltipItems[0].length > 0 *//*&& (tooltipItems[0].datasetIndex == 0 || tooltipItems[0].datasetIndex == 1)*/){
 								//console.log(tooltipItems[0]);
-								value.push(chart.data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].featureId.substring(6, 7) !== "1"? 'gm.' : 'm.');
+								value.push(chart.data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].featureId.substring(6, 7) !== "1"? 'gm.' : '');
 								value.push(' '+gminList[tooltipItems[0].index]+'</b>');
 							}else{
 								console.log("Tooltip widmo");
@@ -1858,7 +1865,7 @@
 						var d_ind;
 						var o1, o2;
 						d_ind = json_GminydemDPolygon_0.getFeaturesByProperty('JPT_KOD_JE', chart.data.datasets[tooltipItems.datasetIndex].data[tooltipItems.index].featureId)[0].properties.Okr;
-						/*if (c_ind=="Polska"){
+						/*if (c_ind=="Poland"){
 							//o1 = 'Jedynka';
 							//o2 = 'Dwójka';
 							
@@ -1868,7 +1875,7 @@
 							o1 = '1.&nbsp;' + json_Okr.getFeaturesByProperty('Okr', d_ind)[0].properties['P' + layer_nr + '_1_naz'] + ':';
 							o2 = '2.&nbsp;' + json_Okr.getFeaturesByProperty('Okr', d_ind)[0].properties['P' + layer_nr + '_2_naz'] + ':';
 						//}
-						return setTooltipText(o1, o2, 'Pozostali kandydaci:', '%',tooltipItems, layer_nr);
+						return setTooltipText(o1, o2, 'Other candidates:', '%',tooltipItems, layer_nr);
 					}					
                 }
 			},
@@ -1978,7 +1985,7 @@
 			chart.data.datasets[3].data = reg_data.points.map(([x, y]) => {
 				return {x, y};
 			});
-			$("#reg_value").html(reg_data.string+'&nbsp;&nbsp;&nbsp;&nbsp'+(!isNaN(reg_data.r2)?('<span>R<sup>2</sup>='+reg_data.r2+'</span>'):''));
+			$("#reg_value").html(reg_data.string+'&nbsp;&nbsp;&nbsp;&nbsp'+(!isNaN(reg_data.r2)?('<span>r<sup>2</sup>='+reg_data.r2+'</span>'):''));
 		}
 		drawReg(scatterPlotDataArray);
 		//chart.data.datasets[2].data = [];
@@ -2205,7 +2212,7 @@
 		function admSumm(obj,par){
 			
 			$('.leaflet-control-layers-list:eq( 1 ) tbody').empty();
-			$(".leaflet-control-layers-list:eq( 1 ) tbody").append('<tr><td>Liczba głosów oddanych na&nbsp;poszczególne komitety:</td>\
+			$(".leaflet-control-layers-list:eq( 1 ) tbody").append('<tr><td>Number of votes cast for individual committees:</td>\
 				<td>'+lengthToBlank(objProp(obj, par, "P1_g"))+numberWithSpaces(objProp(obj, par, "P1_g"))+'</td>\
 				<td>'+lengthToBlank(objProp(obj, par, "P2_g"))+numberWithSpaces(objProp(obj, par, "P2_g"))+'</td>\
 				<td>'+lengthToBlank(objProp(obj, par, "P3_g"))+numberWithSpaces(objProp(obj, par, "P3_g"))+'</td>\
@@ -2217,8 +2224,8 @@
 			for (i=1; i<6; i++){
 				perc_arr.push(objProp(obj, par, "P"+i+"_g")/objProp(obj, par, "LG")*100);
 			}
-			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Odsetek głosów oddanych na&nbsp;poszczególne komitety:",perc_arr[0],perc_arr[1],perc_arr[2],perc_arr[3],perc_arr[4],700,true));
-			$(".leaflet-control-layers-list:eq( 1 ) tbody").append('<tr><td>Liczba głosów oddanych na&nbsp;jedynkę:</td>\
+			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Percentage of votes cast for individual committees:",perc_arr[0],perc_arr[1],perc_arr[2],perc_arr[3],perc_arr[4],700,true));
+			$(".leaflet-control-layers-list:eq( 1 ) tbody").append('<tr><td>Number of votes cast for the 1st-listed candidate:</td>\
 				<td>'+lengthToBlank(objProp(obj, par, "P1_1_g"))+numberWithSpaces(objProp(obj, par, "P1_1_g"))+'</td>\
 				<td>'+lengthToBlank(objProp(obj, par, "P2_1_g"))+numberWithSpaces(objProp(obj, par, "P2_1_g"))+'</td>\
 				<td>'+lengthToBlank(objProp(obj, par, "P3_1_g"))+numberWithSpaces(objProp(obj, par, "P3_1_g"))+'</td>\
@@ -2231,8 +2238,8 @@
 			for (i=1; i<6; i++){
 				perc_arr.push(objProp(obj, par, "P"+i+"_1_g")/objProp(obj, par, "P"+i+"_g")*100);
 			}
-			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Udział jedynki w&nbsp;wyniku listy:",perc_arr[0],perc_arr[1],perc_arr[2],perc_arr[3],perc_arr[4],700,true));
-			$(".leaflet-control-layers-list:eq( 1 ) tbody").append('<tr><td>Liczba głosów oddanych na&nbsp;dwójkę:</td>\
+			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Share of the 1st-listed candidate in the result of the list:",perc_arr[0],perc_arr[1],perc_arr[2],perc_arr[3],perc_arr[4],700,true));
+			$(".leaflet-control-layers-list:eq( 1 ) tbody").append('<tr><td>Number of votes cast for the 2nd-listed candidate:</td>\
 				<td>'+lengthToBlank(objProp(obj, par, "P1_2_g"))+numberWithSpaces(objProp(obj, par, "P1_2_g"))+'</td>\
 				<td>'+lengthToBlank(objProp(obj, par, "P2_2_g"))+numberWithSpaces(objProp(obj, par, "P2_2_g"))+'</td>\
 				<td>'+lengthToBlank(objProp(obj, par, "P3_2_g"))+numberWithSpaces(objProp(obj, par, "P3_2_g"))+'</td>\
@@ -2243,12 +2250,12 @@
 			for (i=1; i<6; i++){
 				perc_arr.push(objProp(obj, par, "P"+i+"_2_g")/objProp(obj, par, "P"+i+"_g")*100);
 			}
-			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Udział dwójki w&nbsp;wyniku listy:",perc_arr[0],perc_arr[1],perc_arr[2],perc_arr[3],perc_arr[4],700,true));
+			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Share of the 2nd-listed candidate in the result of the list:",perc_arr[0],perc_arr[1],perc_arr[2],perc_arr[3],perc_arr[4],700,true));
 			perc_arr = [];
 			for (i=1; i<6; i++){
 				perc_arr.push((objProp(obj, par, "P"+i+"_g")-(objProp(obj, par, "P"+i+"_1_g")+objProp(obj, par, "P"+i+"_2_g")))/objProp(obj, par, "P"+i+"_g")*100);
 			}
-			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Udział w&nbsp;wyniku listy kandydatów z&nbsp;miejsc od&nbsp;trzeciego do&nbsp;ostatniego:",perc_arr[0],perc_arr[1],perc_arr[2],perc_arr[3],perc_arr[4],700,false));
+			$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Participation in the electoral outcome candidates from the third to the last position on the list:",perc_arr[0],perc_arr[1],perc_arr[2],perc_arr[3],perc_arr[4],700,false));
 		}
 		
 		var $select = $('<select></select>')
@@ -2300,7 +2307,7 @@
 					//popup_open_first_clicked = false;
 					//popup_close_first_clicked = true;
 				}
-				if ($(this).val()=='Polska'){
+				if ($(this).val()=='Poland'){
 					chart.data.datasets[1].data = scatterPlotDataArray;
 					drawReg(scatterPlotDataArray);
 					//chart.data.datasets[0].data = [];
@@ -2363,7 +2370,7 @@
 						//map.spin(false);
 						to_subsel = false;
 					},0);
-					$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html('<a href = "https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/pl/wyniki/sejm/pl" target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a>Polska i zagranica');
+					$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html('<a href = "https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/en/wyniki/sejm/pl" target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a>Poland i zagranica');
 					tCountry();
 					cssSumm();
 					//alert("$Select manually_zoomed: " + manually_zoomed);
@@ -2373,7 +2380,7 @@
 						
 						//manually_zoomed = true;
 						//});
-						/*$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html('Polska i zagranica');
+						/*$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html('Poland i zagranica');
 						$('.leaflet-control-layers-list:eq( 1 ) table:eq(0) tbody').empty();
 						$('.leaflet-control-layers-list:eq( 1 ) tbody').append(renderRow('Kandydat popierany przez PiS:',25.68,28.1,34.49,false));
 						$('.leaflet-control-layers-list:eq( 1 ) tbody').append(renderRow('Kandydat popierany przez PO:',28.97,26.42,33.1,false));
@@ -2512,7 +2519,7 @@
 						perc_arr.push((okrProp("P"+i+"_g")-(okrProp("P"+i+"_1_g")+okrProp("P"+i+"_2_g")))/okrProp("P"+i+"_g")*100);
 					}
 					$(".leaflet-control-layers-list:eq( 1 ) tbody").append(renderRow("Udział w&nbsp;wyniku listy kandydatów z&nbsp;miejsc od&nbsp;trzeciego do&nbsp;ostatniego:",perc_arr[0],perc_arr[1],perc_arr[2],perc_arr[3],perc_arr[4],700,false));*/
-					$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html('<a href = "https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/pl/wyniki/sejm/okr/'+okr_+'" target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a>okręg wyborczy nr&nbsp;'+okr_);
+					$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html('<a href = "https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/en/wyniki/sejm/okr/'+okr_+'" target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a>Constituency no.&nbsp;'+okr_);
 					//$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html('okręg wyborczy nr&nbsp;'+okr_);
 					admSumm(json_Okr,'Okr');
 					cssSumm();
@@ -2621,10 +2628,10 @@
 			// ranges
 			if (i==0){
 				$('<option></option>')
-					.text('Polska')
-					.attr('value', 'Polska')
+					.text('Poland')
+					.attr('value', 'Poland')
 					.appendTo($select);
-				$('<optgroup label="Nr okręgu wyborczego"> id ="opt_main"').appendTo($select);
+				$('<optgroup label="Constituency number"> id ="opt_main"').appendTo($select);//Nr okręgu wyborczego
 				$('<option disabled></option>')
 					.text(String.fromCharCode(8194)+String.fromCharCode(8194)+variables[n_woj])
 					.attr('value', variables[n_woj])
@@ -2766,7 +2773,7 @@
 						//map.spin(false);
 					//}, 3000);
 					//$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html('okręg wyborczy nr&nbsp;'+okr_);
-					$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html('<a href = "https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/pl/wyniki/sejm/okr/'+okr_+'" target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a>okręg wyborczy nr&nbsp;'+okr_);
+					$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html('<a href = "https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/en/wyniki/sejm/okr/'+okr_+'" target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a>Constituency no.&nbsp;'+okr_);
 					admSumm(json_Okr,'Okr');
 					cssSumm();
 					
@@ -2861,7 +2868,7 @@
 					
 					//$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html(json_Powiaty_Simplified_1.getFeaturesByProperty('JPT_KOD_JE', pow_)[0].properties["JPT_NAZWA_"]);
 					var pow_end = (pow_=="1465")?"01":"00";
-					$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html('<a href = "https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/pl/wyniki/sejm/pow/' + pow_ + pow_end +'" target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a>'+json_Powiaty_Simplified_1.getFeaturesByProperty('JPT_KOD_JE', pow_)[0].properties["JPT_NAZWA_"]);
+					$('.leaflet-control-layers-list:eq( 1 ) h5:eq(0) span').html('<a href = "https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/en/wyniki/sejm/pow/' + pow_ + pow_end +'" target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a>'+json_Powiaty_Simplified_1.getFeaturesByProperty('JPT_KOD_JE', pow_)[0].properties["JPT_NAZWA_"]);
 					admSumm(json_Powiaty_Simplified_1,'JPT_KOD_JE');
 					cssSumm();
 					
@@ -2910,7 +2917,7 @@
 				chart.update();
 			});
 		function updateLabels(lnr){
-			if ($select.val()!='Polska'){
+			if ($select.val()!='Poland'){
 				xa = '1. ' + json_Okr.getFeaturesByProperty('Okr', Number($select.val()))[0].properties['P' + lnr + '_1_naz'] + ' ' + json_Okr.getFeaturesByProperty('Okr', Number($select.val()))[0].properties['P' + lnr + '_1_im'];
 				ya = '2. ' + json_Okr.getFeaturesByProperty('Okr', Number($select.val()))[0].properties['P' + lnr + '_2_naz'] + ' ' + json_Okr.getFeaturesByProperty('Okr', Number($select.val()))[0].properties['P' + lnr + '_2_im'];
 			}
@@ -2920,7 +2927,7 @@
 			ya = yb;
 		}
 		var subch = function(){
-			if ($select.val()!='Polska'){
+			if ($select.val()!='Poland'){
 				$subselect.prop('disabled', false).empty();
 				filteredListPowArray = filterListPow();
 				//console.log('Powiaty: '+filteredListPowArray);
@@ -3080,10 +3087,10 @@
 			if (tooltipItems.datasetIndex!=2){
 			  if ($subselect.val()=='none'||$subselect.is(':empty')){
 				  
-				  multistringText.push('<tr><td colspan="2" class="toolHead">Położenie:</td></tr>');
-				  if ($select.val()=='Polska'){
+				  multistringText.push('<tr><td colspan="2" class="toolHead">Location:</td></tr>');
+				  if ($select.val()=='Poland'){
 					//multistringText.push('<tr><td colspan="2"  style="text-align: left;"> okręg nr '+ json_Okr.getFeaturesByProperty('Wojewod', scatterPlotDataArray_xy[tooltipItems.index].featureId.substring(0, 2))[0].properties.JPT_NAZWA_+'</td></tr>');
-					multistringText.push('<tr><td colspan="2"  style="text-align: left;"> Okręg wyborczy nr '+ json_GminydemDPolygon_0.getFeaturesByProperty('JPT_KOD_JE', scatterPlotDataArray_xy[tooltipItems.index].featureId)[0].properties.Okr+'</td></tr>');
+					multistringText.push('<tr><td colspan="2"  style="text-align: left;"> Constituency no. '+ json_GminydemDPolygon_0.getFeaturesByProperty('JPT_KOD_JE', scatterPlotDataArray_xy[tooltipItems.index].featureId)[0].properties.Okr+'</td></tr>');
 					//console.log(json_Okr);
 				  }
 				  multistringText.push('<tr><td colspan="2"  style="text-align: left;">'+ json_Powiaty_Simplified_1.getFeaturesByProperty('JPT_KOD_JE', scatterPlotDataArray_xy[tooltipItems.index].featureId.substring(0, 4))[0].properties.JPT_NAZWA_+'</td></tr>');
@@ -3099,9 +3106,9 @@
 					var xtext=(d.x>d.y&&d.x>100-(d.x+d.y))?'<b style="color: #ffffa0">'+opt1+'</b></td><td><b style="color: #ffffa0">'+d.x.toFixed(2)+meas+'</b>':opt1+'</td><td>'+d.x.toFixed(2)+meas;
 					var ytext=(d.y>d.x&&d.y>100-(d.x+d.y))?'<b style="color: #ffffa0">'+opt2+'</b></td><td><b style="color: #ffffa0">'+d.y.toFixed(2)+meas+'</b>':opt2+'</td><td>'+d.y.toFixed(2)+meas;
 					var ztext=(100-(d.x+d.y)>d.x&&100-(d.x+d.y)>d.y)?'<b style="color: #ffffa0">'+opt3+'</b></td><td><b style="color: #ffffa0">'+(100-(d.y+d.x)).toFixed(2)+meas+'</b>':opt3+'</td><td>'+(100-(d.y+d.x)).toFixed(2)+meas;
-					multistringText.push('<tr><td colspan="2" class="toolHead">Wyniki:</td></tr>');
-					multistringText.push('<tr><td>Poparcie dla listy:</td><td>'+ json_GminydemDPolygon_0.getFeaturesByProperty('JPT_KOD_JE', scatterPlotDataArray_xy[tooltipItems.index].featureId)[0].properties['P' + lnr + '_p'].toFixed(2)+'%</td></tr>');
-					multistringText.push('<tr><td colspan="2" class="toolHead">Udział w wyniku listy:</td></tr>');
+					multistringText.push('<tr><td colspan="2" class="toolHead">Result:</td></tr>');
+					multistringText.push('<tr><td>Support for the list:</td><td>'+ json_GminydemDPolygon_0.getFeaturesByProperty('JPT_KOD_JE', scatterPlotDataArray_xy[tooltipItems.index].featureId)[0].properties['P' + lnr + '_p'].toFixed(2)+'%</td></tr>');
+					multistringText.push('<tr><td colspan="2" class="toolHead">Share in support for&nbsp;the&nbsp;list:</td></tr>');
 					multistringText.push('<tr><td>'+xtext+'</td></tr>');
 					multistringText.push('<tr><td>'+ytext+'</td></tr>');
 					multistringText.push('<tr><td>'+ztext+'</td></tr>');
@@ -3125,7 +3132,7 @@
 					chart.data.datasets[2].pointBorderColor = 'rgba(200, 200, 200, 0.5)';
 				}
 				
-				if ($select.val()=='Polska'){
+				if ($select.val()=='Poland'){
 					chart.data.datasets[1].data = scatterPlotDataArray;
 					chart.data.datasets[2].data = [];
 					drawReg(scatterPlotDataArray);
@@ -3166,7 +3173,7 @@
 					setChart();
 				}else{
 					//chart.data.datasets[2].data = [];
-					if ($select.val()!='Polska') fitChart();
+					if ($select.val()!='Poland') fitChart();
 				}
 				chart.update();
 			});
@@ -3232,7 +3239,7 @@
 			block_cl_pop = true;
 			already_filtered = true;
 			chart.data.datasets[0].data = [];
-			if ($select.val()=='Polska'){
+			if ($select.val()=='Poland'){
 				chart.data.datasets[1].data = scatterPlotDataArray;
 				drawReg(scatterPlotDataArray);
 				//fitChart();
@@ -3262,7 +3269,7 @@
 					//console.log('popup opened ' + filtered);
 					//wojewods[PWE].setStyle({color: 'rgba(255,0,0,1.0)'});
 				//}
-				/*if ($select.val()!='Polska'){
+				/*if ($select.val()!='Poland'){
 					$('#subfilter :nth-child(1)').prop('selected', true).change();
 				}*/
 				//chart.data.datasets[1].data = filterChart();
@@ -3274,8 +3281,8 @@
 				
 				console.log($select);
 				console.log($select.val());
-				//if ($select.val()=='Polska'){
-					//console.log("Tak - Polska!");
+				//if ($select.val()=='Poland'){
+					//console.log("Tak - Poland!");
 				var wind = e.popup._source.feature.properties.Okr;
 				//var wind = $("#filter option:selected").text().substring(0,8);
 				//if (wind!=cind){
@@ -3402,10 +3409,10 @@
 					opopupContent[i].push(margl);
 					plpopupContent[i].push(margl);
 				}
-				var pozostali = "Kandydaci z&nbsp;miejsc od&nbsp;trzeciego do&nbsp;ostatniego";
-				var poparcie = "Poparcie dla listy";
-				var jedynki = "Jedynki";
-				var dwojki = "Dwójki";
+				var pozostali = "Candidates from the third to the last position on the list"; //Kandydaci z&nbsp;miejsc od&nbsp;trzeciego do&nbsp;ostatniego
+				var poparcie = "Support for the electoral list"; //Poparcie dla listy
+				var jedynki = "1st-listed candidates"; //Jedynki
+				var dwojki = "2nd-listed candidates"; //Dwójki
 				var d_okr = json_Okr.getFeaturesByProperty('Okr',p.Okr)[0];
 				var curr_kod;
 				var curr_udzial;
@@ -3464,7 +3471,7 @@
 				function writePosition(_pow, _okr, _iter){
 					if (comp_lvl == 3){
 						return _pow+'<br>\
-									Okręg wyborczy nr '+_okr+'<br>';
+									Constituency no. '+_okr+'<br>';
 					}else if  (comp_lvl == 2){
 						return _pow+'<br>';
 					}else{
@@ -3478,7 +3485,7 @@
 				function prepareDataPL(index, gmind){
 					/*len = curr_kod[index].length;
 					ind = curr_kod[index].indexOf(current_KOD);*/
-					t_gm = (curr_kod[index][gmind].substring(6,7)!=="1"?'gm. ':'m. ');
+					t_gm = (curr_kod[index][gmind].substring(6,7)!=="1"?'gm. ':'');
 					wynik_listy = json_GminydemDPolygon_0.getFeaturesByProperty('JPT_KOD_JE', curr_kod[index][gmind])[0].properties['P'+(Math.floor(index/4)+1)+'_p'];
 					//var c_col = String(returnColor_simpl(wynik_listy, allbreaks[Math.floor(i/4)]));
 					if (index%4==3){
@@ -3504,17 +3511,17 @@
 						<div class="containers">\
 							<a class="has-tooltip" href="#"><span class="n_gm" style="width: 120px;">'+u_gm + '<span class="gmina">'+curr_nazwa[iter][nrow]+'</span></span>\
 								<span class="tooltip-wrappers">\
-									<span class="tooltips"><h4 style="margin: 4px; padding: 0px; text-align: center;">Położenie:</h4>\
+									<span class="tooltips"><h4 style="margin: 4px; padding: 0px; text-align: center;">Location:</h4>\
 									TERYT: <span class="kod">' +ckod+'</span><br>\
 									'+writePosition(ppow, ookr)+
 									'<table style="width: 184px;">\
-									<tr><td colspan="2"><h4 style="margin: 4px; padding: 0px; text-align: center;">Wynik:</h4></td></tr>\
-									<tr><td>Poparcie dla&nbsp;listy:</td><td style="text-align: right;">' +result.toFixed(2)+'%</td></tr><tr><td colspan="2"><h4 style="margin: 4px; padding: 0px; text-align: center;">Udział w&nbsp;wyniku:</h4></td></tr><tr><td>'+flexTool(Math.floor(i/4)*4, ckod)+'</td><td>'+lengthToBlank1(curr_udzial[Math.floor(i/4)*4][c1])+'%</td></tr><tr><td>'+flexTool(Math.floor(i/4)*4+1, ckod)+'</td><td>'+lengthToBlank1(curr_udzial[Math.floor(i/4)*4+1][c2])+'%</td></tr><tr><td>Pozostali kandydaci:</td><td>'+lengthToBlank1(curr_udzial[Math.floor(i/4)*4+2][c3])+'%</td></tr></table>\
+									<tr><td colspan="2"><h4 style="margin: 4px; padding: 0px; text-align: center;">Result:</h4></td></tr>\
+									<tr><td>Support for the&nbsp;list:</td><td style="text-align: right;">' +result.toFixed(2)+'%</td></tr><tr><td colspan="2"><h4 style="margin: 4px; padding: 0px; text-align: center;">Share in&nbsp;support for&nbsp;the&nbsp;list:</h4></td></tr><tr><td>'+flexTool(Math.floor(i/4)*4, ckod)+'</td><td>'+lengthToBlank1(curr_udzial[Math.floor(i/4)*4][c1])+'%</td></tr><tr><td>'+flexTool(Math.floor(i/4)*4+1, ckod)+'</td><td>'+lengthToBlank1(curr_udzial[Math.floor(i/4)*4+1][c2])+'%</td></tr><tr><td>Other candidates:</td><td>'+lengthToBlank1(curr_udzial[Math.floor(i/4)*4+2][c3])+'%</td></tr></table>\
 									</span>\
 								</span>\
 							</a>\
 						</div>\
-					</td><td'+bolding+'><div><div style="display: table; padding: 1px;"><div style="display: table-cell; vertical-align: middle; text-align: right; line-height: 0.9;">'+((i%4==3)?('<span style="color: red; font-size: 11px;">'+wynik_listy.toFixed(2)+'%</span>'):('<span style="color: blue;">'+curr_udzial[iter][nrow].toFixed(2)+'%</span><br><span class="ppod">z&nbsp;<span style="color: red; font-size: 10px;">'+wynik_listy.toFixed(2)+'%</span></span>'))+'</div></div></div></td><td><div><div style = "background-color: white; display: inline-block; padding: 0px; margin: 0px; height: 30px;"><div style = "background-color: ' +  curr_kolor[iter][nrow] + '; opacity: 0.8;  width: 12px; height: 26px; border: 1px solid rgba(16, 16, 16, 0.2);"></div></div>'+'<div style = "background-color: white; display: inline-block; padding: 0px; margin: 20px 0px 0px 4px; height: 10px;"><div style = "background-color: ' + c_col  + '; opacity: 0.8;  width: 6px; height: 6px; border: 1px solid rgba(16, 16, 16, 0.2);"></div></div></div></td></tr>';
+					</td><td'+bolding+'><div><div style="display: table; padding: 1px;"><div style="display: table-cell; vertical-align: middle; text-align: right; line-height: 0.9;">'+((i%4==3)?('<span style="color: red; font-size: 11px;">'+wynik_listy.toFixed(2)+'%</span>'):('<span style="color: blue;">'+curr_udzial[iter][nrow].toFixed(2)+'%</span><br><span class="ppod">out&nbsp;of&nbsp;<span style="color: red; font-size: 9px;">'+wynik_listy.toFixed(2)+'%</span></span>'))+'</div></div></div></td><td><div><div style = "background-color: white; display: inline-block; padding: 0px; margin: 0px; height: 30px;"><div style = "background-color: ' +  curr_kolor[iter][nrow] + '; opacity: 0.8;  width: 12px; height: 26px; border: 1px solid rgba(16, 16, 16, 0.2);"></div></div>'+'<div style = "background-color: white; display: inline-block; padding: 0px; margin: 20px 0px 0px 4px; height: 10px;"><div style = "background-color: ' + c_col  + '; opacity: 0.8;  width: 6px; height: 6px; border: 1px solid rgba(16, 16, 16, 0.2);"></div></div></div></td></tr>';
 				}
 				
 				function tbodyGen (nrow, iter, popCont, level){
@@ -3678,7 +3685,7 @@
 					});
 					var typ_gm_d = (p.JPT_KOD_JE.substring(6, 7) !== "1"? 'gminy' : 'miasta');
 					var typ_gm_c = (p.JPT_KOD_JE.substring(6, 7) !== "1"? 'gminie' : 'mieście');
-					$("#tab1").html('<h5 style="text-align: center; color: #484848; padding: 0px 8px;">Poparcie oraz rozkład głosów na listach komitetów ogólnopolskich na terenie '+typ_gm_d+':');
+					$("#tab1").html('<h5 style="text-align: center; color: #484848; padding: 0px 8px;">Support and distribution of votes on the lists of nationwide committees in the municipality:'); //Poparcie oraz rozkład głosów na listach komitetów ogólnopolskich na terenie
 					$("#tab1").append('<table class = "tabela" id="Podsumowanie">\
 						<thead>\
 							<tr style="background: none;">\
@@ -3714,8 +3721,8 @@
 					var hh;
 					col15.push('<tr>');
 					rcol15.push('<tr>');
-					col15.push(std + 'Kolor na&nbsp;mapie udziału kandydatów w&nbsp;wyniku listy:' + xtd);
-					rcol15.push(std + 'Kolor na&nbsp;mapie poparcia dla&nbsp;listy:' + xtd);
+					col15.push(std + 'Color on the map of candidates\' participation in the electoral outcome:' + xtd);
+					rcol15.push(std + 'Color on the map of support for the list:' + xtd);
 					var odp, odp1, odp2;
 					for (i=1; i<6; i++){
 						console.log("Iteracja: "+i);
@@ -3758,49 +3765,50 @@
 					//console.log(kd1);
 					//console.log(gd1);
 					//$("#tab1 table:eq(0) tbody").append(renderRow_text("Liczba głosów oddanych na&nbsp;komitet:",gd_[0],gd_[1],gd_[2],gd_[3],gd_[4],12,false));
-					$("#tab1 table:eq(0) tbody").append('<tr><td>Liczba głosów oddanych na&nbsp;poszczególne komitety:</td>\
+					//Liczba głosów oddanych na&nbsp;poszczególne komitety:
+					$("#tab1 table:eq(0) tbody").append('<tr><td>Number of votes cast for individual committees:</td>\
 						<td>'+lengthToBlank(p.P1_g)+numberWithSpaces(p.P1_g)+'</td>\
 						<td>'+lengthToBlank(p.P2_g)+numberWithSpaces(p.P2_g)+'</td>\
 						<td>'+lengthToBlank(p.P3_g)+numberWithSpaces(p.P3_g)+'</td>\
 						<td>'+lengthToBlank(p.P4_g)+numberWithSpaces(p.P4_g)+'</td>\
 						<td>'+lengthToBlank(p.P5_g)+numberWithSpaces(p.P5_g)+'</td>\
 					</tr>');
-					$("#tab1 table:eq(0) tbody").append(renderRow("Odsetek głosów oddanych na&nbsp;poszczególne komitety:",p.P1_p,p.P2_p,p.P3_p,p.P4_p,p.P5_p,700,false));
-					$("#tab1 table:eq(0) tbody").append(renderRow("Udział w&nbsp;liczbie głosów oddanych na&nbsp;komitet w&nbsp;okręgu:",ud[0],ud[1],ud[2],ud[3],ud[4],400,true));
+					$("#tab1 table:eq(0) tbody").append(renderRow("Percentage of votes cast for individual committees:",p.P1_p,p.P2_p,p.P3_p,p.P4_p,p.P5_p,700,false));//Odsetek głosów oddanych na&nbsp;poszczególne komitety
+					$("#tab1 table:eq(0) tbody").append(renderRow("Share in the number of votes cast for the committee in the constituency:",ud[0],ud[1],ud[2],ud[3],ud[4],400,true));//Udział w&nbsp;liczbie głosów oddanych na&nbsp;komitet w&nbsp;okręgu
 					
 					//divider
-					$("#tab1 table:eq(0) tbody").append(renderRow_text("Nazwisko i&nbsp;imiona jedynki:",kd1[0],kd1[1],kd1[2],kd1[3],kd1[4],11,false));
+					$("#tab1 table:eq(0) tbody").append(renderRow_text("Surname and name of the 1st-listed candidate:",kd1[0],kd1[1],kd1[2],kd1[3],kd1[4],11,false));//Nazwisko i&nbsp;imiona jedynki
 					//console.log(md1);
-					$("#tab1 table:eq(0) tbody").append(renderRow_tool("Gmina zamieszkania jedynki:",md1[0],md1[1],md1[2],md1[3],md1[4],false));
+					$("#tab1 table:eq(0) tbody").append(renderRow_tool("Residence municipality of the 1st-listed candidate:",md1[0],md1[1],md1[2],md1[3],md1[4],false));
 					//$("#tab1 table:eq(0) tbody").append(renderRow_text("Liczba głosów oddanych na&nbsp;jedynkę:",gd_1[0],gd_1[1],gd_1[2],gd_1[3],gd_1[4],12,false));
-					$("#tab1 table:eq(0) tbody").append('<tr><td>Liczba głosów oddanych na&nbsp;jedynkę:</td>\
+					$("#tab1 table:eq(0) tbody").append('<tr><td>Number of votes cast for&nbsp;the 1st-listed candidate:</td>\
 						<td>'+lengthToBlank(p.P1_1_g)+numberWithSpaces(p.P1_1_g)+'</td>\
 						<td>'+lengthToBlank(p.P2_1_g)+numberWithSpaces(p.P2_1_g)+'</td>\
 						<td>'+lengthToBlank(p.P3_1_g)+numberWithSpaces(p.P3_1_g)+'</td>\
 						<td>'+lengthToBlank(p.P4_1_g)+numberWithSpaces(p.P4_1_g)+'</td>\
 						<td>'+lengthToBlank(p.P5_1_g)+numberWithSpaces(p.P5_1_g)+'</td>\
 					</tr>');
-					$("#tab1 table:eq(0) tbody").append(renderRow("Odsetek głosów oddanych na&nbsp;jedynkę:",pd_1[0],pd_1[1],pd_1[2],pd_1[3],pd_1[4],400,false));
-					$("#tab1 table:eq(0) tbody").append(renderRow("Udział jedynki w&nbsp;wyniku listy:",p.P1_1,p.P2_1,p.P3_1,p.P4_1,p.P5_1,700,false));
-					$("#tab1 table:eq(0) tbody").append(renderRow("Udział w&nbsp;liczbie głosów oddanych na&nbsp;jedynkę w&nbsp;okręgu:",gd1[0],gd1[1],gd1[2],gd1[3],gd1[4],400,true));
+					$("#tab1 table:eq(0) tbody").append(renderRow("Percentage of votes cast for&nbsp;the 1st-listed candidate:",pd_1[0],pd_1[1],pd_1[2],pd_1[3],pd_1[4],400,false));
+					$("#tab1 table:eq(0) tbody").append(renderRow("Share of the 1st-listed candidate in the result of the list:",p.P1_1,p.P2_1,p.P3_1,p.P4_1,p.P5_1,700,false));
+					$("#tab1 table:eq(0) tbody").append(renderRow("Share in the number of votes cast for the 1st-listed candidate in the constituency:",gd1[0],gd1[1],gd1[2],gd1[3],gd1[4],400,true));
 					
 					//divider
-					$("#tab1 table:eq(0) tbody").append(renderRow_text("Nazwisko i&nbsp;imiona dwójki:",kd2[0],kd2[1],kd2[2],kd2[3],kd2[4],11,false));
-					$("#tab1 table:eq(0) tbody").append(renderRow_tool("Gmina zamieszkania dwójki:",md2[0],md2[1],md2[2],md2[3],md2[4],false));
+					$("#tab1 table:eq(0) tbody").append(renderRow_text("Surname and name of the 2nd-listed candidate:",kd2[0],kd2[1],kd2[2],kd2[3],kd2[4],11,false));
+					$("#tab1 table:eq(0) tbody").append(renderRow_tool("Residence municipality of the 2nd-listed candidate:",md2[0],md2[1],md2[2],md2[3],md2[4],false));
 					//$("#tab1 table:eq(0) tbody").append(renderRow_text("Liczba głosów oddanych na&nbsp;dwójkę:",gd_2[0],gd_2[1],gd_2[2],gd_2[3],gd_2[4],12,false));
-					$("#tab1 table:eq(0) tbody").append('<tr><td>Liczba głosów oddanych na&nbsp;dwójkę:</td>\
+					$("#tab1 table:eq(0) tbody").append('<tr><td>Number of votes cast for&nbsp;the 2nd-listed candidate:</td>\
 						<td>'+lengthToBlank(p.P1_2_g)+numberWithSpaces(p.P1_2_g)+'</td>\
 						<td>'+lengthToBlank(p.P2_2_g)+numberWithSpaces(p.P2_2_g)+'</td>\
 						<td>'+lengthToBlank(p.P3_2_g)+numberWithSpaces(p.P3_2_g)+'</td>\
 						<td>'+lengthToBlank(p.P4_2_g)+numberWithSpaces(p.P4_2_g)+'</td>\
 						<td>'+lengthToBlank(p.P5_2_g)+numberWithSpaces(p.P5_2_g)+'</td>\
 					</tr>');
-					$("#tab1 table:eq(0) tbody").append(renderRow("Odsetek głosów oddanych na&nbsp;dwójkę:",pd_2[0],pd_2[1],pd_2[2],pd_2[3],pd_2[4],400,false));
-					$("#tab1 table:eq(0) tbody").append(renderRow("Udział dwójki w&nbsp;wyniku listy:",p.P1_2,p.P2_2,p.P3_2,p.P4_2,p.P5_2,700,false));
-					$("#tab1 table:eq(0) tbody").append(renderRow("Udział w&nbsp;liczbie głosów oddanych na&nbsp;dwójkę w&nbsp;okręgu:",gd2[0],gd2[1],gd2[2],gd2[3],gd2[4],400,true));
+					$("#tab1 table:eq(0) tbody").append(renderRow("Percentage of votes cast for&nbsp;the 2nd-listed candidate:",pd_2[0],pd_2[1],pd_2[2],pd_2[3],pd_2[4],400,false));
+					$("#tab1 table:eq(0) tbody").append(renderRow("Share of the 2nd-listed candidate in the result of the list:",p.P1_2,p.P2_2,p.P3_2,p.P4_2,p.P5_2,700,false));
+					$("#tab1 table:eq(0) tbody").append(renderRow("Share in the number of votes cast for the 2nd-listed candidate in the constituency:",gd2[0],gd2[1],gd2[2],gd2[3],gd2[4],400,true));
 					
 					//divider
-					$("#tab1 table:eq(0) tbody").append(renderRow("Udział w&nbsp;wyniku listy kandydatów z&nbsp;miejsc od&nbsp;trzeciego do&nbsp;ostatniego:",100-(p.P1_1+p.P1_2),100-(p.P2_1+p.P2_2),100-(p.P3_1+p.P3_2),100-(p.P4_1+p.P4_2),100-(p.P5_1+p.P5_2),700,true));
+					$("#tab1 table:eq(0) tbody").append(renderRow("Participation in the electoral outcome candidates from the third to the last position on the list:",100-(p.P1_1+p.P1_2),100-(p.P2_1+p.P2_2),100-(p.P3_1+p.P3_2),100-(p.P4_1+p.P4_2),100-(p.P5_1+p.P5_2),700,true));
 					
 					$("#tab1 table:eq(0) tbody").append(rcol15.join(""));
 					$("#tab1 table:eq(0) tbody").append(col15.join(""));
@@ -3837,21 +3845,21 @@
 					$("#tab1 table:eq(0) tbody tr:eq(15) td").css("text-shadow", css_sh_yell);
 					$("#tab1 table:eq(0) tbody tr:eq(15) td").eq(0).css("text-shadow","none");
 					$("#tab1 table:eq(0) tbody tr:eq(15) td").eq(0).css("color","#cc8800");
-					$("#tab1").append('<h5 style="text-align: center; color: #484848; padding: 0px 8px;">Dodatkowe informacje:');
+					$("#tab1").append('<h5 style="text-align: center; color: #484848; padding: 0px 8px;">Additional information:');//Dodatkowe informacje
 					$("#tab1").append('<table class = "tabela" id="Podsumowanie2">\
 						<thead>\
 						</thead>\
 						<tbody>\
 						</tbody>\
 					</table>');
-					$("#tab1 table:eq(1) tbody").append('<tr><td>Liczba uprawnionych do&nbsp;głosowania:</td><td>'+lengthToBlank(p.LW)+numberWithSpaces(p.LW)+'</td></tr>');
-					$("#tab1 table:eq(1) tbody").append('<tr><td>Liczba głosów ważnych:</td><td>'+lengthToBlank(p.LG)+numberWithSpaces(p.LG)+'</td></tr>');
+					$("#tab1 table:eq(1) tbody").append('<tr><td>Registered voters:</td><td>'+lengthToBlank(p.LW)+numberWithSpaces(p.LW)+'</td></tr>');
+					$("#tab1 table:eq(1) tbody").append('<tr><td>Valid votes:</td><td>'+lengthToBlank(p.LG)+numberWithSpaces(p.LG)+'</td></tr>');
 					var ogo = p.LG/json_Okr.getFeaturesByProperty('Okr', p.Okr)[0].properties.L_g*100;
-					$("#tab1 table:eq(1) tbody").append('<tr><td>Udział w&nbsp;liczbie głosów ważnych oddanych w&nbsp;okręgu:</td><td>'+lengthToBlank1(ogo)+'%</td></tr>');
+					$("#tab1 table:eq(1) tbody").append('<tr><td>Share in the number of valid votes cast in the constituency:</td><td>'+lengthToBlank1(ogo)+'%</td></tr>');
 					var lgp = p.P1_g+p.P2_g+p.P3_g+p.P4_g+p.P5_g;
-					$("#tab1 table:eq(1) tbody").append('<tr><td>Liczba głosów oddanych na&nbsp;komitety ogólnopolskie:</td><td>'+lengthToBlank(lgp)+numberWithSpaces(lgp)+'</td></tr>');
+					$("#tab1 table:eq(1) tbody").append('<tr><td>Number of votes cast for nationwide committees:</td><td>'+lengthToBlank(lgp)+numberWithSpaces(lgp)+'</td></tr>');
 					var ogp = lgp/p.LG*100;
-					$("#tab1 table:eq(1) tbody").append('<tr><td>Odsetek głosów oddanych na&nbsp;komitety ogólnopolskie:</td><td>'+lengthToBlank1(ogp)+'%</td></tr>');
+					$("#tab1 table:eq(1) tbody").append('<tr><td>Percentage of votes cast for nationwide committees:</td><td>'+lengthToBlank1(ogp)+'%</td></tr>');
 					$("#tab1 table:eq(1) tbody tr td").eq(1).css("width","100px");
 					$("#tab1 table:eq(1) tbody tr:eq(2) td").eq(1).css("color","#86e");
 					$("#tab1 table:eq(1) tbody tr:eq(4) td").eq(1).css("color","#86e");
@@ -3876,7 +3884,7 @@
 						a_code = '';
 					}
 					
-					return "https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/pl/wyniki/komitet/" + party_code + '/sejm/' + adm_level + '/' + a_code;
+					return "https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/en/wyniki/komitet/" + party_code + '/sejm/' + adm_level + '/' + a_code;
 				}
 				
 				$('#tab2').ready(function (){
@@ -3886,9 +3894,9 @@
 					}
 					for (i=0; i<5; i++){
 						$('#tab'+(i+2)).append('<p>'+popupContent[i].join("")+'</p>');
-						$('#tab'+(i+2)).append('<h5 style = "margin-left:28px; color: #282828;"><a href = "'+toPkwSite(party_codes[i],'okr',current_KOD)+'"  target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a><span class = "admHead">Okręg wyborczy nr ' + POE + ':</span></h5>');
+						$('#tab'+(i+2)).append('<h5 style = "margin-left:28px; color: #282828;"><a href = "'+toPkwSite(party_codes[i],'okr',current_KOD)+'"  target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a><span class = "admHead">Constituency no.  ' + POE + ':</span></h5>');
 						$('#tab'+(i+2)).append('<p>'+opopupContent[i].join("")+'</p>');
-						$('#tab'+(i+2)).append('<h5 style = "margin-left:28px; color: #282828;"><a href = "'+toPkwSite(party_codes[i],'pl',current_KOD)+'"  target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a><span class = "admHead">Polska:</span></h5>');
+						$('#tab'+(i+2)).append('<h5 style = "margin-left:28px; color: #282828;"><a href = "'+toPkwSite(party_codes[i],'pl',current_KOD)+'"  target = "_blank"><img src="images/pkw_pl.png" alt = "PKW" class = "PKW"></a><span class = "admHead">Poland:</span></h5>');
 						$('#tab'+(i+2)).append('<p>'+plpopupContent[i].join("")+'</p>');
 						$( "p" ).remove( ":contains('undefined')" );
 						//$("#tooltip-2").tooltip();
@@ -3944,7 +3952,7 @@
 						//console.log($(current_tab)[0]);
 						console.log("already_filtered: "+already_filtered);
 						
-						if ($select.val()=='Polska'/*&&currentAttrValue!='#tab1'*/){
+						if ($select.val()=='Poland'/*&&currentAttrValue!='#tab1'*/){
 							chart.data.datasets[1].data = scatterPlotDataArray;
 							//sc = $(current_tab).scrollTop();
 							//$(current_tab).scrollTop($(current_tab).scrollHeight);
@@ -4026,7 +4034,7 @@
 							chart.data.datasets[2].data =[];
 							sd = $("#tab1").scrollTop();
 							$('#tab1 .tooltips').css("bottom",(sd/*+24*/)+"px");
-							if ($select.val()=='Polska'){
+							if ($select.val()=='Poland'){
 								//resetLabels();
 								chart.data.datasets[1].data = scatterPlotDataArray;
 								drawReg(scatterPlotDataArray);
@@ -4059,7 +4067,7 @@
 						//chart.data.datasets[1].data = scatterPlotDataArray;
 						//$select.change(subch);
 						chart.data.datasets[0].data = checkPoint();
-						/*if ($select.val()=='Polska'){
+						/*if ($select.val()=='Poland'){
 							//resetLabels();
 							chart.data.datasets[1].data = scatterPlotDataArray;
 							
@@ -4265,7 +4273,7 @@
 							//$select.change(subch);
 							//console.log($('#subfilter :nth-child(1)'));
 							item_clicked = true;
-							if ($select.val()!='Polska'){
+							if ($select.val()!='Poland'){
 								//item_clicked = true;
 								$('#subfilter :nth-child(1)').prop('selected', true).change();
 								//item_clicked = false;
@@ -4323,8 +4331,8 @@
 							
 							console.log($select);
 							console.log($select.val());
-							//if ($select.val()=='Polska'){
-								//console.log("Tak - Polska!");
+							//if ($select.val()=='Poland'){
+								//console.log("Tak - Poland!");
 							var wind = json_GminydemDPolygon_0.getFeaturesByProperty('JPT_KOD_JE', kod)[0].properties.Okr;
 							//if (wind!=cind){
 								//$('#filter :nth-child('+wind+')').prop('selected', true).change();
@@ -4476,7 +4484,7 @@
 							//$select.change(subch);
 							//console.log($('#subfilter :nth-child(1)'));
 							
-							if ($select.val()!='Polska'){
+							if ($select.val()!='Poland'){
 								//item_clicked = true;
 								$('#subfilter :nth-child(1)').prop('selected', true).change();
 								//item_clicked = false;
@@ -4525,8 +4533,8 @@
 							
 							console.log($select);
 							console.log($select.val());
-							//if ($select.val()=='Polska'){
-								//console.log("Tak - Polska!");
+							//if ($select.val()=='Poland'){
+								//console.log("Tak - Poland!");
 							var wind = json_GminydemDPolygon_0.getFeaturesByProperty('JPT_KOD_JE', kod)[0].properties.Okr;
 							//if (wind!=cind){
 								//$('#filter :nth-child('+wind+')').prop('selected', true).change();
@@ -4612,7 +4620,7 @@
 			chart.data.datasets[0].data = checkPoint();
 			//map.spin(true);
 			pop_moving = true;
-			if ($select.val()=='Polska'){
+			if ($select.val()=='Poland'){
 				//resetLabels();
 				chart.data.datasets[1].data = scatterPlotDataArray;
 				drawReg(scatterPlotDataArray);
@@ -4762,42 +4770,42 @@
 					updateData_cmy("P1_1", "P1_2", "P1_p", "P1_rgb");
 					layer_nr = 1;
 					updateLabels(1);
-					chart.options.title.text = ['Udział kandydatów w wyniku listy oraz poparcie', 'dla KW PRAWO I SPRAWIEDLIWOŚĆ:'];
+					chart.options.title.text = ['Participation of candidates in the electoral outcome', 'and support for' + name_1 + ':'];
 					updateData(layer_P1);
 					break;
 				case opt[1]:
 					updateData_cmy("P2_1", "P2_2", "P2_p", "P2_rgb");
 					layer_nr = 2;
 					updateLabels(2);
-					chart.options.title.text = ['Udział kandydatów w wyniku listy oraz poparcie dla', 'KKW KOALICJA OBYWATELSKA PO .N IPL ZIELONI:'];
+					chart.options.title.text = ['Participation of candidates in the electoral outcome', 'and support for' + name_2 + ':'];
 					updateData(layer_P2);
 					break;
 				case opt[2]:
 					updateData_cmy("P3_1", "P3_2", "P3_p", "P3_rgb");
 					layer_nr = 3;
 					updateLabels(3);
-					chart.options.title.text = ['Udział kandydatów w wyniku listy oraz poparcie dla', 'KW SOJUSZ LEWICY DEMOKRATYCZNEJ:'];
+					chart.options.title.text = ['Participation of candidates in the electoral outcome', 'and support for' + name_3 + ':'];
 					updateData(layer_P3);
 					break;
 				case opt[3]:
 					updateData_cmy("P4_1", "P4_2", "P4_p", "P4_rgb");
 					layer_nr = 4;
 					updateLabels(4);
-					chart.options.title.text = ['Udział kandydatów w wyniku listy oraz poparcie dla', 'KOMITETU WYBORCZEGO PSL:'];
+					chart.options.title.text = ['Participation of candidates in the electoral outcome', 'and support for' + name_4 + ':'];
 					updateData(layer_P4);
 					break;
 				case opt[4]:
 					updateData_cmy("P5_1", "P5_2", "P5_p", "P5_rgb");
 					layer_nr = 5;
 					updateLabels(5);
-					chart.options.title.text = ['Udział kandydatów w wyniku listy oraz poparcie dla', 'KW KONFEDERACJA WOLNOŚĆ I NIEPODLEGŁOŚĆ:'];
+					chart.options.title.text = ['Participation of candidates in the electoral outcome', 'and support for' + name_5 + ':'];
 					updateData(layer_P5);
 					break;
 				default:
 					updateData_cmy("P1_1", "P1_2", "P1_p", "P1_rgb");
 					layer_nr = 1;
 					updateLabels(1);
-					chart.options.title.text = ['Udział kandydatów w wyniku listy oraz poparcie dla', 'KW PRAWO I SPRAWIEDLIWOŚĆ:'];
+					chart.options.title.text = ['Participation of candidates in the electoral outcome', 'and support for' + name_1 + ':'];
 					updateData(layer_current);
 			}
 			
@@ -4807,32 +4815,32 @@
 			switch(idl){
 				case l1:
 					$('.leaflet-bottom:eq( 0 )').html('<img class="leaflet-control" src="./images/1.png" style="width: 200px; opacity: 0.9; margin-bottom: -32px;">');
-					$('#ltitle').html('Poparcie w gminach dla KW PRAWO I SPRAWIEDLIWOŚĆ:');
+					$('#ltitle').html('Support in municipalities for' + name_1 + ':');
 					$('#vlegend').html(drawLegend(fcolors, pisbreaks));
 					break;
 				case l2:
 					$('.leaflet-bottom:eq( 0 )').html('<img class="leaflet-control" src="./images/2.png" style="width: 200px; opacity: 0.9; margin-bottom: 0px;">');
-					$('#ltitle').html('Poparcie w gminach dla KKW KOALICJA OBYWATELSKA PO&nbsp;.N&nbsp;IPL&nbsp;ZIELONI:');
+					$('#ltitle').html('Support in municipalities for' + name_2 + ':');
 					$('#vlegend').html(drawLegend(fcolors, kobreaks));
 					break;
 				case l3:
 					$('.leaflet-bottom:eq( 0 )').html('<img class="leaflet-control" src="./images/3.png" style="width: 200px; opacity: 0.9; margin-bottom: 12px;">');
-					$('#ltitle').html('Poparcie w gminach dla KW SOJUSZ LEWICY DEMOKRATYCZNEJ:');
+					$('#ltitle').html('Support in municipalities for' + name_3 + ':');
 					$('#vlegend').html(drawLegend(fcolors, lbreaks));
 					break;
 				case l4:
 					$('.leaflet-bottom:eq( 0 )').html('<img class="leaflet-control" src="./images/4.png" style="width: 200px; opacity: 0.9; margin-bottom: -60px;">');
-					$('#ltitle').html('Poparcie w gminach dla KOMITETU WYBORCZEGO PSL:');
+					$('#ltitle').html('Support in municipalities for' + name_4 + ':');
 					$('#vlegend').html(drawLegend(fcolors, pslbreaks));
 					break;
 				case l5:
 					$('.leaflet-bottom:eq( 0 )').html('<img class="leaflet-control" src="./images/5.png" style="width: 200px; opacity: 0.9; margin-bottom: 4px;">');
-					$('#ltitle').html('Poparcie w gminach dla KW KONFEDERACJA WOLNOŚĆ I&nbsp;NIEPODLEGŁOŚĆ:');
+					$('#ltitle').html('Support in municipalities for' + name_5 + ':');
 					$('#vlegend').html(drawLegend(fcolors, konfbreaks));
 					break;
 				default:
 					$('.leaflet-bottom:eq( 0 )').html('<img class="leaflet-control" src="./images/1.png" style="width: 200px; opacity: 0.9; margin-bottom: -32px;">');
-					$('#ltitle').html('Poparcie w gminach dla KW PRAWO I&nbsp;SPRAWIEDLIWOŚĆ:');
+					$('#ltitle').html('Support in municipalities for' + name_1 + ':');
 					$('#vlegend').html(drawLegend(fcolors, pisbreaks));
 			}
 			
@@ -4855,7 +4863,7 @@
 			//chart.data.datasets[1].data = scatterPlotDataArray;
 			//$select.change(subch);
 			chart.data.datasets[0].data = checkPoint();
-			if ($select.val()=='Polska'){
+			if ($select.val()=='Poland'){
 				//resetLabels();
 				chart.data.datasets[1].data = scatterPlotDataArray;
 				drawReg(scatterPlotDataArray);
@@ -4899,7 +4907,7 @@
 			});
 			//resetLabels([layer_Powiaty_Simplified_2]);
 			
-			if (/*!filtered&&currentAttrValue!='#tab1'*/$select.val()=='Polska'){
+			if (/*!filtered&&currentAttrValue!='#tab1'*/$select.val()=='Poland'){
 				layer_Okr_2.setStyle({color: 'rgba(80,80,80,1.0)'/*, fillColor: 'rgba(255,224,224,0.0)'*/, fillPattern: patt_blank});
 				layer_Powiaty_Simplified_1.setStyle({color: 'rgba(96,96,96,1.0)'/*, fillColor: 'rgba(255,224,224,0.0)'*/, fillPattern: patt_blank});
 				//map.fitBounds([[48.7066068804,11.9576083267],[54.6798073754,27.5635253264]], {paddingBottomRight: [400, 0], paddingTopLeft: [80, 0], animate: true, duration: 0.75});
@@ -4939,7 +4947,7 @@
 			zoom = map.getZoom();
 			//setTimeout(function () {
 			
-			//if($select.val()=='Polska'){
+			//if($select.val()=='Poland'){
 			/*if (zoom < tooltipThreshold && (!lastZoom || lastZoom >= tooltipThreshold)) {
 				map.getPane('labels').style.display = 'none';
 				map.getPane('labels').style['text-align'] = 'center';
@@ -5011,7 +5019,7 @@
 			layer_Powiaty_Simplified_2.setStyle({weight: Math.pow((1.4+(Math.pow((10-currentZoom),2)-5)/49),(currentZoom-6))*1.44});
 			layer_Okr_2.setStyle({weight: Math.pow((1.4+(Math.pow((10-currentZoom),2)-5)/49),(currentZoom-6))*1.6});
 			layer_Okr_1.setStyle({weight: Math.pow((1.4+(Math.pow((10-currentZoom),2)-5)/49),(currentZoom-6))*2.56});
-			if ($select.val()=='Polska'){
+			if ($select.val()=='Poland'){
 				console.log("Bez filtrowania");
 			}else if  ($subselect.val()=='none'||$subselect.is(':empty')){
 				//layer_Powiaty_Simplified_1.setStyle({weight: Math.pow((1.4+(Math.pow((10-currentZoom),2)-5)/49),(currentZoom-6))*1.08});
